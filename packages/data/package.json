@@ -1,0 +1,29 @@
+{
+  "name": "@monkeywrench/data",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@monkeywrench/db": "workspace:*",
+    "@monkeywrench/types": "workspace:*",
+    "@xenova/transformers": "^2.17.0",
+    "all-the-package-names": "^2.0.0"
+  },
+  "devDependencies": {
+    "tsdown": "^0.12.0",
+    "typescript": "^5.8.0",
+    "vitest": "^3.0.0"
+  }
+}
