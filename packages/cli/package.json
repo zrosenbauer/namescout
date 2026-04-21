@@ -1,6 +1,14 @@
 {
-  "name": "@monkeywrench/cli",
+  "name": "monkeywrench",
   "version": "0.0.1",
+  "description": "npm package naming toolkit — generate, check, and score package names",
+  "keywords": ["npm", "package", "naming", "cli", "squatter", "availability"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zrosenbauer/monkeywrench.git",
+    "directory": "packages/cli"
+  },
   "type": "module",
   "bin": {
     "monkeywrench": "./dist/index.js"
