@@ -25,28 +25,30 @@ export async function runCheck(db: Database.Database, options: CheckOptions): Pr
 
   const results: CheckResult[] = []
 
-  for (const name of names) {
-    const squat = squatterResults.get(name)!
-
-    const stringMatches = await findStringSimilar(db, name)
-    const semanticMatches = await findSemanticSimilar(db, name)
-
-    const riskLevel = computeRisk({
-      available: !squat.exists,
-      squatted: squat.squatted,
-      stringMatches,
-      semanticMatches,
+  const checkResults = await Promise.all(
+    names.map(async (name) => {
+      const squat = squatterResults.get(name)!
+      const [stringMatches, semanticMatches] = await Promise.all([
+        findStringSimilar(db, name),
+        findSemanticSimilar(db, name),
+      ])
+      const riskLevel = computeRisk({
+        available: !squat.exists,
+        squatted: squat.squatted,
+        stringMatches,
+        semanticMatches,
+      })
+      return {
+        name,
+        available: !squat.exists,
+        squatted: squat.squatted,
+        riskLevel,
+        stringMatches,
+        semanticMatches,
+      } satisfies CheckResult
     })
-
-    results.push({
-      name,
-      available: !squat.exists,
-      squatted: squat.squatted,
-      riskLevel,
-      stringMatches,
-      semanticMatches,
-    })
-  }
+  )
+  results.push(...checkResults)
 
   const runId = createRun(db, source)
   for (const result of results) {

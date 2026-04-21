@@ -1,6 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let extractor: any | null = null
 
+const EMBED_OPTIONS = { pooling: 'mean', normalize: true } as const
+
 export async function getEmbedder(): Promise<any> {
   if (extractor) return extractor
 
@@ -9,10 +11,14 @@ export async function getEmbedder(): Promise<any> {
   return extractor
 }
 
+async function runModel(model: any, text: string): Promise<Float32Array> {
+  const output = await model(text, EMBED_OPTIONS)
+  return new Float32Array(output.data)
+}
+
 export async function embedText(text: string): Promise<Float32Array> {
   const model = await getEmbedder()
-  const output = await model(text, { pooling: 'mean', normalize: true })
-  return new Float32Array(output.data)
+  return runModel(model, text)
 }
 
 export async function embedBatch(texts: readonly string[], batchSize: number = 64): Promise<Float32Array[]> {
@@ -21,12 +27,7 @@ export async function embedBatch(texts: readonly string[], batchSize: number = 6
 
   for (let i = 0; i < texts.length; i += batchSize) {
     const batch = texts.slice(i, i + batchSize)
-    const outputs = await Promise.all(
-      batch.map(async (text) => {
-        const output = await model(text, { pooling: 'mean', normalize: true })
-        return new Float32Array(output.data)
-      })
-    )
+    const outputs = await Promise.all(batch.map((text) => runModel(model, text)))
     results.push(...outputs)
   }
 

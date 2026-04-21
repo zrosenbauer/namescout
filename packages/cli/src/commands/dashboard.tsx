@@ -56,7 +56,6 @@ function Dashboard(): React.ReactElement {
   const handleRunSelect = (runIdStr: string): void => {
     const runId = Number(runIdStr)
     const db = openDatabase()
-    initializeSchema(db)
     const results = getRunResults(db, runId)
     db.close()
     setSelectedRunResults(results)
