@@ -30,15 +30,14 @@ export async function findStringSimilar(
   if (candidates.length === 0) return []
 
   const { CmpStr } = await getCmpStr()
-  const cmp = new CmpStr(name, candidates)
-  const ranked: { target: string; similarity: number }[] = cmp.similarity('jaroWinkler')
+  const cmp = new CmpStr({ metric: 'jaroWinkler' })
+  const ranked = cmp.batchSorted(name, candidates, 'desc')
 
   return ranked
-    .sort((a, b) => b.similarity - a.similarity)
     .slice(0, limit)
-    .map((m) => ({
+    .map((m: any) => ({
       name: m.target,
-      score: m.similarity,
+      score: m.match,
     }))
 }
 

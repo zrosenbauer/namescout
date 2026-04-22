@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module'
 import type Database from 'better-sqlite3'
 import {
   insertPackages,
@@ -23,7 +24,8 @@ export async function syncPackageNames(
 ): Promise<{ added: number }> {
   onProgress?.({ phase: 'loading-names', total: 0, current: 0 })
 
-  const allNames: string[] = (await import('all-the-package-names')).default
+  const require = createRequire(import.meta.url)
+  const allNames: string[] = require('all-the-package-names')
   const beforeCount = getPackageCount(db)
 
   onProgress?.({ phase: 'inserting-names', total: allNames.length, current: 0 })

@@ -2,7 +2,14 @@
   "name": "monkeywrench",
   "version": "0.0.1",
   "description": "npm package naming toolkit — generate, check, and score package names",
-  "keywords": ["npm", "package", "naming", "cli", "squatter", "availability"],
+  "keywords": [
+    "npm",
+    "package",
+    "naming",
+    "cli",
+    "squatter",
+    "availability"
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -31,17 +38,23 @@
     "@monkeywrench/data": "workspace:*",
     "@monkeywrench/db": "workspace:*",
     "@monkeywrench/types": "workspace:*",
-    "ink": "^7.0.0",
-    "ink-gradient": "^4.0.0",
+    "ink": "^7.0.1",
     "ink-big-text": "^2.0.0",
-    "react": "^19.2.0",
-    "ts-pattern": "^5.0.0",
-    "zod": "^3.24.0"
+    "ink-gradient": "^4.0.0",
+    "react": "^19.2.5",
+    "ts-pattern": "^5.9.0",
+    "all-the-package-names": "^2.0.2424",
+    "better-sqlite3": "^12.9.0",
+    "cmpstr": "^3.3.0",
+    "sqlite-vec": "^0.1.9",
+    "squatter": "^0.2.1",
+    "@xenova/transformers": "^2.17.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@kidd-cli/cli": "^0.11.5",
-    "@types/react": "^19.2.0",
-    "tsdown": "^0.12.0",
-    "typescript": "^5.8.0"
+    "@types/react": "^19.2.14",
+    "tsdown": "^0.21.9",
+    "typescript": "^6.0.3"
   }
 }

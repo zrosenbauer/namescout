@@ -5,21 +5,18 @@ import type { OutputFormat } from '@monkeywrench/types'
 import { ensureDatabase } from '../lib/ensure-db.js'
 import fs from 'node:fs'
 
-const positionals = z.object({
-  names: z.array(z.string()).describe('Package names to check'),
-})
-
 const options = z.object({
   file: z.string().optional().describe('JSON file with candidate names'),
   format: z.enum(['table', 'agent', 'json']).default('table').describe('Output format'),
 })
 
 export default command({
+  name: 'check <names..>',
   description: 'Check package name availability, squatter status, and similarity',
-  positionals,
   options,
   async handler(ctx) {
-    let names: string[] = [...ctx.args.names]
+    const raw = (ctx.args as any).names as string | string[]
+    let names: string[] = Array.isArray(raw) ? [...raw] : [raw]
 
     if (ctx.args.file) {
       const content = fs.readFileSync(ctx.args.file, 'utf-8')

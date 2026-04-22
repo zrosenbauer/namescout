@@ -9,7 +9,7 @@ export async function checkSquatter(name: string): Promise<SquatterResult> {
     const isSquatted = await squatter(name)
     return { exists: true, squatted: isSquatted }
   } catch (error: any) {
-    if (error?.code === 'PackageNotFoundError' || error?.message?.includes('404') || error?.statusCode === 404) {
+    if (error?.code === 'PackageNotFoundError' || error?.message?.includes('404') || error?.statusCode === 404 || error?.message?.includes("doesn't exist")) {
       return { exists: false, squatted: null }
     }
     throw error

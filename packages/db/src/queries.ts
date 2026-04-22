@@ -38,24 +38,23 @@ export function getPackageNamesNotEmbedded(db: Database.Database): string[] {
 }
 
 export function getPackageId(db: Database.Database, name: string): number | null {
-  const row = db.prepare('SELECT id FROM packages WHERE name = ?').get(name) as { id: number } | undefined
-  return row?.id ?? null
+  const row = db.prepare('SELECT id FROM packages WHERE name = ?').get(name) as { id: number | bigint } | undefined
+  return row ? Number(row.id) : null
 }
 
 // ── Embeddings ───────────────────────────────────────────────────────────────
 
 export function insertEmbedding(db: Database.Database, id: number, embedding: Float32Array): void {
-  db.prepare('INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (?, ?)').run(id, embedding.buffer)
+  db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(Buffer.from(embedding.buffer))
 }
 
 export function insertEmbeddings(
   db: Database.Database,
   entries: readonly { id: number; embedding: Float32Array }[]
 ): void {
-  const stmt = db.prepare('INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (?, ?)')
   const insertMany = db.transaction((rows: readonly { id: number; embedding: Float32Array }[]) => {
     for (const { id, embedding } of rows) {
-      stmt.run(id, embedding.buffer)
+      db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(Buffer.from(embedding.buffer))
     }
   })
   insertMany(entries)
@@ -71,11 +70,10 @@ export function findSimilarByVector(
       SELECT p.name, v.distance
       FROM package_embeddings v
       JOIN packages p ON p.id = v.id
-      WHERE v.embedding MATCH ?
+      WHERE v.embedding MATCH ? AND k = ?
       ORDER BY v.distance
-      LIMIT ?
     `)
-    .all(embedding.buffer, limit) as { name: string; distance: number }[]
+    .all(Buffer.from(embedding.buffer), limit) as { name: string; distance: number }[]
 
   return rows.map((row) => ({
     name: row.name,
