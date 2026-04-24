@@ -53,10 +53,15 @@ export function getPackageId(db: Database.Database, name: string): number | null
 
 // ── Embeddings ───────────────────────────────────────────────────────────────
 
+function quantizeToInt8(float32: Float32Array): Buffer {
+  const int8 = Int8Array.from(float32, (v) => Math.max(-128, Math.min(127, Math.round(v * 127))))
+  return Buffer.from(int8.buffer)
+}
+
 export function insertEmbedding(db: Database.Database, id: number, embedding: Float32Array): void {
-  db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(
-    Buffer.from(embedding.buffer)
-  )
+  db.prepare(
+    `INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, vec_int8(?))`
+  ).run(quantizeToInt8(embedding))
 }
 
 export function insertEmbeddings(
@@ -65,9 +70,9 @@ export function insertEmbeddings(
 ): void {
   const insertMany = db.transaction((rows: readonly { id: number; embedding: Float32Array }[]) => {
     for (const { id, embedding } of rows) {
-      db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(
-        Buffer.from(embedding.buffer)
-      )
+      db.prepare(
+        `INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, vec_int8(?))`
+      ).run(quantizeToInt8(embedding))
     }
   })
   insertMany(entries)
@@ -83,10 +88,10 @@ export function findSimilarByVector(
       SELECT p.name, v.distance
       FROM package_embeddings v
       JOIN packages p ON p.id = v.id
-      WHERE v.embedding MATCH ? AND k = ?
+      WHERE v.embedding MATCH vec_int8(?) AND k = ?
       ORDER BY v.distance
     `)
-    .all(Buffer.from(embedding.buffer), limit) as { name: string; distance: number }[]
+    .all(quantizeToInt8(embedding), limit) as { name: string; distance: number }[]
 
   return rows.map((row) => ({
     name: row.name,

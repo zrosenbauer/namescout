@@ -9,6 +9,11 @@ concurrency:
   group: snapshot
   cancel-in-progress: false
 
+env:
+  RCLONE_CONFIG_R2_TYPE: s3
+  RCLONE_CONFIG_R2_PROVIDER: Cloudflare
+  RCLONE_CONFIG_R2_NO_CHECK_BUCKET: 'true'
+
 jobs:
   build-snapshot:
     name: Build & Upload Snapshot
@@ -33,7 +38,17 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Build snapshot database
+      - name: Install rclone
+        run: sudo apt-get install -y rclone
+
+      - name: Download existing snapshot
+        run: rclone copyto r2:namescout-snapshots/namescout.db ./namescout.db --s3-no-check-bucket || echo "No existing snapshot found, starting fresh."
+        env:
+          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          RCLONE_CONFIG_R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+
+      - name: Sync and embed new packages
         run: |
           node -e "
             import { openDatabase, initializeSchema } from '@namescout/db';
@@ -45,11 +60,14 @@ jobs:
             db.close();
           "
 
+      - name: Compress with zstd
+        run: zstd -f -19 ./namescout.db -o ./namescout.db.zst
+
       - name: Upload to R2
         run: |
-          aws s3 cp ./namescout.db s3://namescout-snapshots/namescout.db \
-            --endpoint-url https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+          rclone copyto ./namescout.db r2:namescout-snapshots/namescout.db --progress --s3-no-check-bucket
+          rclone copyto ./namescout.db.zst r2:namescout-snapshots/namescout.db.zst --progress --s3-no-check-bucket
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: auto
+          RCLONE_CONFIG_R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          RCLONE_CONFIG_R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          RCLONE_CONFIG_R2_ENDPOINT: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com

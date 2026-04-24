@@ -9,7 +9,7 @@ export function initializeSchema(db: Database.Database): void {
 
     CREATE VIRTUAL TABLE IF NOT EXISTS package_embeddings USING vec0(
       id INTEGER PRIMARY KEY,
-      embedding float[384]
+      embedding int8[384]
     );
 
     CREATE TABLE IF NOT EXISTS runs (

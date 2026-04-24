@@ -74,5 +74,5 @@
       }
     }
   ],
-  "ignorePatterns": ["node_modules", "dist", ".turbo", ".claude", "coverage"]
+  "ignorePatterns": ["node_modules", "dist", ".turbo", ".claude", "coverage", "**/scripts/**"]
 }

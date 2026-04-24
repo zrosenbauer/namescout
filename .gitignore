@@ -39,6 +39,9 @@ coverage/
 # Superpowers
 .superpowers/
 
+# Wrangler
+.wrangler/
+
 # SQLite
 *.db
 *.db-wal
