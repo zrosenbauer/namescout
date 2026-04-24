@@ -12,11 +12,16 @@
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "test": "turbo run test",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "prepare": "lefthook install"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/types": "^20.5.0",
     "eslint-plugin-functional": "^9.0.4",
     "eslint-plugin-security": "^4.0.0",
+    "lefthook": "^2.1.6",
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
     "turbo": "^2.9.6",
