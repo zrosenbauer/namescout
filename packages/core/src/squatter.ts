@@ -5,6 +5,7 @@ export interface SquatterResult {
 
 export async function checkSquatter(name: string): Promise<SquatterResult> {
   try {
+    // @ts-expect-error -- squatter has no type declarations
     const squatterModule = await import('squatter')
     const squatter = squatterModule.default
     const isSquatted = await squatter(name)

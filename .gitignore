@@ -10,8 +10,9 @@ dist/
 
 # Environment
 .env
-.env.*
 .env.local
+.env.*
+!.env.example
 
 # IDE / Editor
 .idea/

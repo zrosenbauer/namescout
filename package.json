@@ -25,6 +25,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@commitlint/types": "^20.5.0",
+    "@types/better-sqlite3": "^7.6.13",
     "eslint-plugin-functional": "^9.0.4",
     "eslint-plugin-security": "^4.0.0",
     "lefthook": "^2.1.6",

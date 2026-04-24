@@ -1,5 +1,4 @@
 export { embedText, embedBatch, getEmbedder } from './embed.js'
 export { syncPackageNames, embedNewPackages } from './sync.js'
 export type { SyncProgress, SyncProgressCallback } from './sync.js'
-export { getLatestSnapshot, downloadSnapshot, hasLocalDatabase } from './snapshot.js'
-export type { SnapshotInfo } from './snapshot.js'
+export { downloadSnapshot, hasLocalDatabase } from './snapshot.js'

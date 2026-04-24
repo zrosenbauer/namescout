@@ -32,7 +32,7 @@ export async function findStringSimilar(
   }
 
   const { CmpStr } = await getCmpStr()
-  const cmp = new CmpStr({ metric: 'jaroWinkler' })
+  const cmp = CmpStr.create({ metric: 'jaroWinkler' })
   const ranked = cmp.batchSorted(name, candidates, 'desc') as { target: string; match: number }[]
 
   return ranked.slice(0, limit).map((m) => ({

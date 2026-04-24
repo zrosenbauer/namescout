@@ -139,10 +139,10 @@ export function getRunResults(db: Database.Database, runId: number): CheckResult
   return rows.map((row) => ({
     available: Boolean(row.available),
     name: row.name,
-    riskLevel: row.risk_level,
-    semanticMatches: JSON.parse(row.semantic_matches),
+    riskLevel: row.risk_level as CheckResult['riskLevel'],
+    semanticMatches: JSON.parse(row.semantic_matches) as CheckResult['semanticMatches'],
     squatted: row.squatted === null ? null : Boolean(row.squatted),
-    stringMatches: JSON.parse(row.string_matches),
+    stringMatches: JSON.parse(row.string_matches) as CheckResult['stringMatches'],
   }))
 }
 

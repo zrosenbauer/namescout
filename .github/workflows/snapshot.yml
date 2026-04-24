@@ -2,25 +2,36 @@ name: Build Snapshot
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: '0 6 * * *'
   workflow_dispatch:
+
+concurrency:
+  group: snapshot
+  cancel-in-progress: false
 
 jobs:
   build-snapshot:
+    name: Build & Upload Snapshot
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'pnpm'
+          cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
 
       - name: Build snapshot database
         run: |
@@ -34,14 +45,11 @@ jobs:
             db.close();
           "
 
-      - name: Get date tag
-        id: date
-        run: echo "tag=snapshot-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
-
-      - name: Create release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.date.outputs.tag }}
-          name: 'Snapshot ${{ steps.date.outputs.tag }}'
-          files: namescout.db
-          body: 'Weekly pre-built package database snapshot.'
+      - name: Upload to R2
+        run: |
+          aws s3 cp ./namescout.db s3://namescout-snapshots/namescout.db \
+            --endpoint-url https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto

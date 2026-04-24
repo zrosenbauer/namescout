@@ -1,21 +1,12 @@
-import {
-  downloadSnapshot,
-  embedNewPackages,
-  getLatestSnapshot,
-  hasLocalDatabase,
-  syncPackageNames,
-} from '@namescout/data'
+import { downloadSnapshot, hasLocalDatabase } from '@namescout/data'
 import { getSyncMeta, initializeSchema, openDatabase } from '@namescout/db'
 import type Database from 'better-sqlite3'
 
 export async function ensureDatabase(): Promise<Database.Database> {
   if (!hasLocalDatabase()) {
-    const snapshot = await getLatestSnapshot()
-    if (snapshot) {
-      console.log('Downloading package database...')
-      await downloadSnapshot(snapshot.downloadUrl)
-      console.log('Download complete.')
-    }
+    console.log('Downloading package database...')
+    await downloadSnapshot()
+    console.log('Download complete.')
   }
 
   const db = openDatabase()
@@ -23,15 +14,7 @@ export async function ensureDatabase(): Promise<Database.Database> {
 
   const meta = getSyncMeta(db)
 
-  if (meta.packageCount === 0) {
-    console.log('Syncing package names...')
-    const { added } = await syncPackageNames(db)
-    console.log(`Added ${added} packages.`)
-
-    console.log('Generating embeddings for new packages...')
-    const { embedded } = await embedNewPackages(db)
-    console.log(`Embedded ${embedded} packages.`)
-  } else if (meta.lastSync) {
+  if (meta.lastSync) {
     const daysSinceSync = (Date.now() - new Date(meta.lastSync).getTime()) / (1000 * 60 * 60 * 24)
     if (daysSinceSync > 7) {
       console.warn('Package database is over 7 days old. Run `namescout sync` to update.')

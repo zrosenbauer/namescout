@@ -2,7 +2,6 @@ import { command } from '@kidd-cli/core'
 import {
   downloadSnapshot,
   embedNewPackages,
-  getLatestSnapshot,
   hasLocalDatabase,
   syncPackageNames,
 } from '@namescout/data'
@@ -12,12 +11,9 @@ export default command({
   description: 'Download or update the package name database',
   async handler(ctx) {
     if (!hasLocalDatabase()) {
-      const snapshot = await getLatestSnapshot()
-      if (snapshot) {
-        ctx.log.info(`Downloading snapshot ${snapshot.version}...`)
-        await downloadSnapshot(snapshot.downloadUrl)
-        ctx.log.info('Snapshot downloaded.')
-      }
+      ctx.log.info('Downloading snapshot...')
+      await downloadSnapshot()
+      ctx.log.info('Snapshot downloaded.')
     }
 
     const db = openDatabase()
