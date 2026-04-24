@@ -1,6 +1,23 @@
-import React from 'react'
 import { Box, Text } from '@kidd-cli/core/ui'
-import type { CheckResult } from '@monkeywrench/types'
+import type { CheckResult, RiskLevel } from '@namescout/types'
+import React from 'react'
+
+function formatSquatted(squatted: boolean | null): string {
+  if (squatted === null) {
+    return '-'
+  }
+  return squatted ? 'likely' : 'no'
+}
+
+function riskColor(level: RiskLevel): string {
+  if (level === 'low') {
+    return 'green'
+  }
+  if (level === 'medium') {
+    return 'yellow'
+  }
+  return 'red'
+}
 
 interface DetailViewProps {
   readonly result: CheckResult
@@ -12,16 +29,26 @@ export function DetailView({ result }: DetailViewProps): React.ReactElement {
       <Text bold>{result.name}</Text>
 
       <Box gap={2}>
-        <Text>Available: <Text color={result.available ? 'green' : 'red'}>{result.available ? 'yes' : 'no'}</Text></Text>
-        <Text>Squatted: <Text>{result.squatted === null ? '-' : result.squatted ? 'likely' : 'no'}</Text></Text>
-        <Text>Risk: <Text color={result.riskLevel === 'low' ? 'green' : result.riskLevel === 'medium' ? 'yellow' : 'red'}>{result.riskLevel}</Text></Text>
+        <Text>
+          Available:{' '}
+          <Text color={result.available ? 'green' : 'red'}>{result.available ? 'yes' : 'no'}</Text>
+        </Text>
+        <Text>
+          Squatted: <Text>{formatSquatted(result.squatted)}</Text>
+        </Text>
+        <Text>
+          Risk: <Text color={riskColor(result.riskLevel)}>{result.riskLevel}</Text>
+        </Text>
       </Box>
 
       {result.stringMatches.length > 0 && (
         <Box flexDirection="column">
           <Text bold>Similar Names (string)</Text>
           {result.stringMatches.slice(0, 5).map((m) => (
-            <Text key={m.name}>  {m.name} ({(m.score * 100).toFixed(0)}%)</Text>
+            <Text key={m.name}>
+              {' '}
+              {m.name} ({(m.score * 100).toFixed(0)}%)
+            </Text>
           ))}
         </Box>
       )}
@@ -30,7 +57,10 @@ export function DetailView({ result }: DetailViewProps): React.ReactElement {
         <Box flexDirection="column">
           <Text bold>Similar Names (semantic)</Text>
           {result.semanticMatches.slice(0, 5).map((m) => (
-            <Text key={m.name}>  {m.name} ({(m.score * 100).toFixed(0)}%)</Text>
+            <Text key={m.name}>
+              {' '}
+              {m.name} ({(m.score * 100).toFixed(0)}%)
+            </Text>
           ))}
         </Box>
       )}

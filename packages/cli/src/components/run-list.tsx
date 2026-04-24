@@ -1,6 +1,6 @@
-import React from 'react'
 import { Box, Select, Text } from '@kidd-cli/core/ui'
-import type { Run } from '@monkeywrench/types'
+import type { Run } from '@namescout/types'
+import React from 'react'
 
 interface RunListProps {
   readonly runs: readonly Omit<Run, 'results'>[]
@@ -12,13 +12,13 @@ export function RunList({ runs, resultCounts, onSelect }: RunListProps): React.R
   if (runs.length === 0) {
     return (
       <Box flexDirection="column" padding={1}>
-        <Text color="gray">No runs yet. Use `monkeywrench check` to get started.</Text>
+        <Text color="gray">No runs yet. Use `namescout check` to get started.</Text>
       </Box>
     )
   }
 
   const options = runs.map((run, i) => {
-    const counts = resultCounts[i]!
+    const counts = resultCounts[i] ?? { total: 0, available: 0 }
     return {
       label: `${run.timestamp} [${run.source}] — ${counts.available}/${counts.total} available`,
       value: String(run.id),

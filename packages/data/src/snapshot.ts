@@ -1,10 +1,10 @@
-import fs from 'node:fs'
+import fs, { createWriteStream } from 'node:fs'
 import path from 'node:path'
-import { createWriteStream } from 'node:fs'
 import { pipeline } from 'node:stream/promises'
-import { getDbPath } from '@monkeywrench/db'
 
-const REPO = 'zrosenbauer/monkeywrench'
+import { getDbPath } from '@namescout/db'
+
+const REPO = 'zrosenbauer/namescout'
 
 export interface SnapshotInfo {
   readonly version: string
@@ -14,15 +14,22 @@ export interface SnapshotInfo {
 export async function getLatestSnapshot(): Promise<SnapshotInfo | null> {
   try {
     const response = await fetch(`https://api.github.com/repos/${REPO}/releases/latest`)
-    if (!response.ok) return null
+    if (!response.ok) {
+      return null
+    }
 
-    const release = (await response.json()) as { tag_name: string; assets: { name: string; browser_download_url: string }[] }
-    const asset = release.assets.find((a) => a.name === 'monkeywrench.db')
-    if (!asset) return null
+    const release = (await response.json()) as {
+      tag_name: string
+      assets: { name: string; browser_download_url: string }[]
+    }
+    const asset = release.assets.find((entry) => entry.name === 'namescout.db')
+    if (!asset) {
+      return null
+    }
 
     return {
-      version: release.tag_name,
       downloadUrl: asset.browser_download_url,
+      version: release.tag_name,
     }
   } catch {
     return null
@@ -43,7 +50,7 @@ export async function downloadSnapshot(url: string, destPath?: string): Promise<
   }
 
   const fileStream = createWriteStream(dbPath)
-  await pipeline(response.body as any, fileStream)
+  await pipeline(response.body as NodeJS.ReadableStream, fileStream)
 }
 
 export function hasLocalDatabase(dbPath?: string): boolean {

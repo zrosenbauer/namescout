@@ -5,11 +5,18 @@ export interface SquatterResult {
 
 export async function checkSquatter(name: string): Promise<SquatterResult> {
   try {
-    const squatter = (await import('squatter')).default
+    const squatterModule = await import('squatter')
+    const squatter = squatterModule.default
     const isSquatted = await squatter(name)
     return { exists: true, squatted: isSquatted }
-  } catch (error: any) {
-    if (error?.code === 'PackageNotFoundError' || error?.message?.includes('404') || error?.statusCode === 404 || error?.message?.includes("doesn't exist")) {
+  } catch (error: unknown) {
+    const err = error as Record<string, unknown>
+    if (
+      err?.code === 'PackageNotFoundError' ||
+      (typeof err?.message === 'string' && err.message.includes('404')) ||
+      err?.statusCode === 404 ||
+      (typeof err?.message === 'string' && err.message.includes("doesn't exist"))
+    ) {
       return { exists: false, squatted: null }
     }
     throw error
@@ -22,8 +29,8 @@ export async function checkSquatterBatch(
   const results = new Map<string, SquatterResult>()
 
   const CONCURRENCY = 5
-  for (let i = 0; i < names.length; i += CONCURRENCY) {
-    const batch = names.slice(i, i + CONCURRENCY)
+  const batches = chunkNames(names, CONCURRENCY)
+  for (const batch of batches) {
     const batchResults = await Promise.all(
       batch.map(async (name) => ({
         name,
@@ -36,4 +43,10 @@ export async function checkSquatterBatch(
   }
 
   return results
+}
+
+function chunkNames(arr: readonly string[], size: number): string[][] {
+  return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+    arr.slice(i * size, (i + 1) * size)
+  )
 }

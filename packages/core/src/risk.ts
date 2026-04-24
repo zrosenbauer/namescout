@@ -1,4 +1,4 @@
-import type { RiskLevel, SimilarityMatch } from '@monkeywrench/types'
+import type { RiskLevel, SimilarityMatch } from '@namescout/types'
 
 interface RiskInput {
   readonly available: boolean

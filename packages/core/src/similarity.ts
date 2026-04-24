@@ -1,9 +1,9 @@
+import { embedText } from '@namescout/data'
+import { findSimilarByVector } from '@namescout/db'
+import type { SimilarityMatch } from '@namescout/types'
 import type Database from 'better-sqlite3'
-import type { SimilarityMatch } from '@monkeywrench/types'
-import { findSimilarByVector } from '@monkeywrench/db'
-import { embedText } from '@monkeywrench/data'
 
-let cmpstrModule: typeof import('cmpstr') | null = null
+let cmpstrModule: typeof import('cmpstr') | null = null // oxlint-disable-line functional/no-let -- lazy-loaded module cache
 
 async function getCmpStr() {
   if (!cmpstrModule) {
@@ -25,20 +25,20 @@ export async function findStringSimilar(
       LIMIT 500
     `)
     .all(`${name}%`, `%${prefix}%`)
-    .map((row: any) => row.name as string)
+    .map((row) => (row as { name: string }).name)
 
-  if (candidates.length === 0) return []
+  if (candidates.length === 0) {
+    return []
+  }
 
   const { CmpStr } = await getCmpStr()
   const cmp = new CmpStr({ metric: 'jaroWinkler' })
-  const ranked = cmp.batchSorted(name, candidates, 'desc')
+  const ranked = cmp.batchSorted(name, candidates, 'desc') as { target: string; match: number }[]
 
-  return ranked
-    .slice(0, limit)
-    .map((m: any) => ({
-      name: m.target,
-      score: m.match,
-    }))
+  return ranked.slice(0, limit).map((m) => ({
+    name: m.target,
+    score: m.match,
+  }))
 }
 
 export async function findSemanticSimilar(

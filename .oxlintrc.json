@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "react",
+    "unicorn",
+    "import",
+    "jsx-a11y",
+    "react-perf",
+    "vitest",
+    "promise",
+    "node",
+    "oxc"
+  ],
+  "jsPlugins": ["eslint-plugin-security", "eslint-plugin-functional"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "pedantic": "warn",
+    "perf": "error",
+    "style": "warn"
+  },
+  "rules": {
+    "typescript/no-explicit-any": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-inferrable-types": "off",
+    "prefer-const": "error",
+    "no-var": "error",
+    "no-nested-ternary": "error",
+    "no-unneeded-ternary": "error",
+    "no-ternary": "off",
+    "curly": "error",
+    "functional/no-let": "error",
+    "unicorn/no-unreadable-iife": "error",
+    "unicorn/no-null": "off",
+    "security/detect-child-process": "error",
+    "security/detect-eval-with-expression": "error",
+    "security/detect-non-literal-fs-filename": "warn",
+    "security/detect-non-literal-regexp": "error",
+    "security/detect-object-injection": "off",
+    "security/detect-possible-timing-attacks": "warn",
+    "security/detect-unsafe-regex": "error",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-perf/jsx-no-new-object-as-prop": "warn",
+    "react-perf/jsx-no-new-function-as-prop": "warn",
+    "react/jsx-max-depth": "off",
+    "import/no-unassigned-import": "off",
+    "import/no-named-export": "off",
+    "import/group-exports": "off",
+    "import/prefer-default-export": "off",
+    "import/no-nodejs-modules": "off",
+    "import/no-namespace": "off",
+    "no-magic-numbers": "off",
+    "func-style": "off",
+    "id-length": "off",
+    "sort-imports": "off",
+    "sort-keys": "off",
+    "init-declarations": "off",
+    "no-await-in-loop": "off",
+    "jest/no-hooks": "off",
+    "jest/max-expects": "off",
+    "jest/prefer-importing-jest-globals": "off",
+    "jest/valid-title": "off",
+    "vitest/prefer-importing-vitest-globals": "off",
+    "vitest/prefer-describe-function-title": "off",
+    "react-perf/jsx-no-new-array-as-prop": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "rules": {
+        "functional/no-let": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["node_modules", "dist", ".turbo", ".claude", "coverage"]
+}

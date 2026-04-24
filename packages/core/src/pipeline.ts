@@ -1,10 +1,25 @@
+import { createRun, insertResult } from '@namescout/db'
+import type { CheckResult, OutputFormat } from '@namescout/types'
 import type Database from 'better-sqlite3'
-import type { CheckResult, OutputFormat } from '@monkeywrench/types'
-import { createRun, insertResult } from '@monkeywrench/db'
-import { checkSquatterBatch } from './squatter.js'
-import { findStringSimilar, findSemanticSimilar } from './similarity.js'
+
+import { formatAgent, formatJson, formatTable } from './format.js'
+
+function formatOutput(format: OutputFormat, results: readonly CheckResult[]): string {
+  switch (format) {
+    case 'table': {
+      return formatTable(results)
+    }
+    case 'agent': {
+      return formatAgent(results)
+    }
+    case 'json': {
+      return formatJson(results)
+    }
+  }
+}
 import { computeRisk } from './risk.js'
-import { formatTable, formatAgent, formatJson } from './format.js'
+import { findSemanticSimilar, findStringSimilar } from './similarity.js'
+import { checkSquatterBatch } from './squatter.js'
 
 export interface CheckOptions {
   readonly names: readonly string[]
@@ -27,24 +42,24 @@ export async function runCheck(db: Database.Database, options: CheckOptions): Pr
 
   const checkResults = await Promise.all(
     names.map(async (name) => {
-      const squat = squatterResults.get(name)!
+      const squat = squatterResults.get(name) ?? { exists: false, squatted: null }
       const [stringMatches, semanticMatches] = await Promise.all([
         findStringSimilar(db, name),
         findSemanticSimilar(db, name),
       ])
       const riskLevel = computeRisk({
         available: !squat.exists,
+        semanticMatches,
         squatted: squat.squatted,
         stringMatches,
-        semanticMatches,
       })
       return {
-        name,
         available: !squat.exists,
-        squatted: squat.squatted,
+        name,
         riskLevel,
-        stringMatches,
         semanticMatches,
+        squatted: squat.squatted,
+        stringMatches,
       } satisfies CheckResult
     })
   )
@@ -55,18 +70,7 @@ export async function runCheck(db: Database.Database, options: CheckOptions): Pr
     insertResult(db, runId, result)
   }
 
-  let formatted: string
-  switch (format) {
-    case 'table':
-      formatted = formatTable(results)
-      break
-    case 'agent':
-      formatted = formatAgent(results)
-      break
-    case 'json':
-      formatted = formatJson(results)
-      break
-  }
+  const formatted = formatOutput(format, results)
 
-  return { runId, results, formatted }
+  return { formatted, results, runId }
 }

@@ -1,25 +1,25 @@
 {
-  "name": "monkeywrench",
+  "name": "namescout",
   "version": "0.0.1",
   "description": "npm package naming toolkit — generate, check, and score package names",
   "keywords": [
+    "availability",
+    "cli",
+    "naming",
     "npm",
     "package",
-    "naming",
-    "cli",
-    "squatter",
-    "availability"
+    "squatter"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/zrosenbauer/monkeywrench.git",
+    "url": "https://github.com/zrosenbauer/namescout.git",
     "directory": "packages/cli"
   },
-  "type": "module",
   "bin": {
-    "monkeywrench": "./dist/index.js"
+    "namescout": "./dist/index.js"
   },
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -34,21 +34,21 @@
   },
   "dependencies": {
     "@kidd-cli/core": "^0.23.1",
-    "@monkeywrench/core": "workspace:*",
-    "@monkeywrench/data": "workspace:*",
-    "@monkeywrench/db": "workspace:*",
-    "@monkeywrench/types": "workspace:*",
+    "@namescout/core": "workspace:*",
+    "@namescout/data": "workspace:*",
+    "@namescout/db": "workspace:*",
+    "@namescout/types": "workspace:*",
+    "@xenova/transformers": "^2.17.2",
+    "all-the-package-names": "^2.0.2424",
+    "better-sqlite3": "^12.9.0",
+    "cmpstr": "^3.3.0",
     "ink": "^7.0.1",
     "ink-big-text": "^2.0.0",
     "ink-gradient": "^4.0.0",
     "react": "^19.2.5",
-    "ts-pattern": "^5.9.0",
-    "all-the-package-names": "^2.0.2424",
-    "better-sqlite3": "^12.9.0",
-    "cmpstr": "^3.3.0",
     "sqlite-vec": "^0.1.9",
     "squatter": "^0.2.1",
-    "@xenova/transformers": "^2.17.2",
+    "ts-pattern": "^5.9.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

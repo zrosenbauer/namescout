@@ -25,9 +25,9 @@ jobs:
       - name: Build snapshot database
         run: |
           node -e "
-            import { openDatabase, initializeSchema } from '@monkeywrench/db';
-            import { syncPackageNames, embedNewPackages } from '@monkeywrench/data';
-            const db = openDatabase('./monkeywrench.db');
+            import { openDatabase, initializeSchema } from '@namescout/db';
+            import { syncPackageNames, embedNewPackages } from '@namescout/data';
+            const db = openDatabase('./namescout.db');
             initializeSchema(db);
             await syncPackageNames(db);
             await embedNewPackages(db);
@@ -42,6 +42,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.date.outputs.tag }}
-          name: "Snapshot ${{ steps.date.outputs.tag }}"
-          files: monkeywrench.db
-          body: "Weekly pre-built package database snapshot."
+          name: 'Snapshot ${{ steps.date.outputs.tag }}'
+          files: namescout.db
+          body: 'Weekly pre-built package database snapshot.'

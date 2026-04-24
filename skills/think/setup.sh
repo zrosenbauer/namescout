@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if ! command -v monkeywrench &>/dev/null; then
-  echo "monkeywrench not found. Installing..."
-  npm install -g @monkeywrench/cli
+if ! command -v namescout &>/dev/null; then
+  echo "namescout not found. Installing..."
+  npm install -g @namescout/cli
 fi
 
-if ! monkeywrench sync --check 2>/dev/null; then
-  echo "Initializing monkeywrench database..."
-  monkeywrench sync
+if ! namescout sync --check 2>/dev/null; then
+  echo "Initializing namescout database..."
+  namescout sync
 fi
 
-echo "monkeywrench is ready."
+echo "namescout is ready."

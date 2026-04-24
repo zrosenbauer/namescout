@@ -1,11 +1,12 @@
-import path from 'node:path'
-import os from 'node:os'
 import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+
 import Database from 'better-sqlite3'
 import * as sqliteVec from 'sqlite-vec'
 
-const DB_DIR = path.join(os.homedir(), '.monkeywrench')
-const DB_PATH = path.join(DB_DIR, 'monkeywrench.db')
+const DB_DIR = path.join(os.homedir(), '.namescout')
+const DB_PATH = path.join(DB_DIR, 'namescout.db')
 
 export function getDbPath(): string {
   return DB_PATH

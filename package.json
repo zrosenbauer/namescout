@@ -1,19 +1,26 @@
 {
-  "name": "monkeywrench",
+  "name": "namescout",
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.33.0",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "typecheck": "turbo run typecheck",
-    "lint": "turbo run lint",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
     "test": "turbo run test",
     "clean": "turbo run clean"
   },
   "devDependencies": {
+    "eslint-plugin-functional": "^9.0.4",
+    "eslint-plugin-security": "^4.0.0",
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
     "turbo": "^2.9.6",
     "typescript": "^6.0.3"
-  }
+  },
+  "packageManager": "pnpm@10.33.0"
 }

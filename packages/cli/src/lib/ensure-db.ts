@@ -1,6 +1,12 @@
+import {
+  downloadSnapshot,
+  embedNewPackages,
+  getLatestSnapshot,
+  hasLocalDatabase,
+  syncPackageNames,
+} from '@namescout/data'
+import { getSyncMeta, initializeSchema, openDatabase } from '@namescout/db'
 import type Database from 'better-sqlite3'
-import { openDatabase, initializeSchema, getSyncMeta } from '@monkeywrench/db'
-import { hasLocalDatabase, downloadSnapshot, getLatestSnapshot, syncPackageNames, embedNewPackages } from '@monkeywrench/data'
 
 export async function ensureDatabase(): Promise<Database.Database> {
   if (!hasLocalDatabase()) {
@@ -28,7 +34,7 @@ export async function ensureDatabase(): Promise<Database.Database> {
   } else if (meta.lastSync) {
     const daysSinceSync = (Date.now() - new Date(meta.lastSync).getTime()) / (1000 * 60 * 60 * 24)
     if (daysSinceSync > 7) {
-      console.warn('Package database is over 7 days old. Run `monkeywrench sync` to update.')
+      console.warn('Package database is over 7 days old. Run `namescout sync` to update.')
     }
   }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@monkeywrench/db",
+  "name": "@namescout/db",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -16,7 +16,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@monkeywrench/types": "workspace:*",
+    "@namescout/types": "workspace:*",
     "better-sqlite3": "^12.9.0",
     "sqlite-vec": "^0.1.9"
   },

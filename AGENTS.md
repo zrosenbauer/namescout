@@ -1,4 +1,4 @@
-# Monkeywrench
+# Namescout
 
 An npm package naming toolkit — generate names, check availability, detect squatters, and run semantic similarity "vibe checks" against the entire npm registry.
 
@@ -18,11 +18,11 @@ An npm package naming toolkit — generate names, check availability, detect squ
 
 ```
 packages/
-  types/     → @monkeywrench/types   — shared TypeScript interfaces
-  db/        → @monkeywrench/db      — SQLite + sqlite-vec layer
-  data/      → @monkeywrench/data    — sync pipeline, embeddings, snapshot download
-  core/      → @monkeywrench/core    — check pipeline (squatter → similarity → risk)
-  cli/       → monkeywrench (npm)    — kidd CLI + Ink TUI dashboard
+  types/     → @namescout/types   — shared TypeScript interfaces
+  db/        → @namescout/db      — SQLite + sqlite-vec layer
+  data/      → @namescout/data    — sync pipeline, embeddings, snapshot download
+  core/      → @namescout/core    — check pipeline (squatter → similarity → risk)
+  cli/       → namescout (npm)    — kidd CLI + Ink TUI dashboard
 skills/
   check/     → Vercel skill for validating package names
   think/     → Vercel skill for creative naming workflow
@@ -31,18 +31,18 @@ skills/
 ## CLI Commands
 
 ```
-monkeywrench                              → opens dashboard TUI (default)
-monkeywrench check <name> [names...]      → score names, store results
-monkeywrench check --file candidates.json → score from file
-monkeywrench sync                         → download/update package DB
-monkeywrench history                      → list past runs
+namescout                              → opens dashboard TUI (default)
+namescout check <name> [names...]      → score names, store results
+namescout check --file candidates.json → score from file
+namescout sync                         → download/update package DB
+namescout history                      → list past runs
 ```
 
 `check` supports `--format=table|agent|json`.
 
 ## Data
 
-Single SQLite file at `~/.monkeywrench/monkeywrench.db`. Pre-built snapshot downloaded from GitHub releases on first run. Delta sync for new packages via `all-the-package-names`.
+Single SQLite file at `~/.namescout/namescout.db`. Pre-built snapshot downloaded from GitHub releases on first run. Delta sync for new packages via `all-the-package-names`.
 
 ## Conventions
 

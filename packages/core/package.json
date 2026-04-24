@@ -1,5 +1,5 @@
 {
-  "name": "@monkeywrench/core",
+  "name": "@namescout/core",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -16,9 +16,9 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@monkeywrench/data": "workspace:*",
-    "@monkeywrench/db": "workspace:*",
-    "@monkeywrench/types": "workspace:*",
+    "@namescout/data": "workspace:*",
+    "@namescout/db": "workspace:*",
+    "@namescout/types": "workspace:*",
     "cmpstr": "^3.3.0",
     "squatter": "^0.2.1"
   },

@@ -2,7 +2,6 @@ import { defineConfig } from '@kidd-cli/core'
 
 export default defineConfig({
   build: {
-    out: './dist',
     external: [
       'better-sqlite3',
       'sqlite-vec',
@@ -11,6 +10,7 @@ export default defineConfig({
       'squatter',
       'cmpstr',
     ],
+    out: './dist',
   },
   commands: './src/commands',
   compile: false,

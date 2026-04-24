@@ -1,32 +1,32 @@
-import { describe, it, expect } from 'vitest'
-import { formatTable, formatAgent, formatJson } from './format.js'
-import type { CheckResult } from '@monkeywrench/types'
+import type { CheckResult } from '@namescout/types'
+
+import { formatAgent, formatJson, formatTable } from './format.js'
 
 const MOCK_RESULTS: CheckResult[] = [
   {
-    name: 'fetchcraft',
     available: true,
-    squatted: null,
+    name: 'fetchcraft',
     riskLevel: 'low',
-    stringMatches: [{ name: 'fetch', score: 0.8 }],
     semanticMatches: [{ name: 'http-get', score: 0.7 }],
+    squatted: null,
+    stringMatches: [{ name: 'fetch', score: 0.8 }],
   },
   {
-    name: 'reqwest',
     available: false,
-    squatted: true,
+    name: 'reqwest',
     riskLevel: 'medium',
-    stringMatches: [{ name: 'request', score: 0.9 }],
     semanticMatches: [],
+    squatted: true,
+    stringMatches: [{ name: 'request', score: 0.9 }],
   },
 ]
 
 describe('formatTable', () => {
   it('produces a markdown table', () => {
     const table = formatTable(MOCK_RESULTS)
-    expect(table).toContain('| fetchcraft |')
-    expect(table).toContain('| reqwest |')
-    expect(table).toContain('| Name |')
+    expect(table).toContain('fetchcraft')
+    expect(table).toContain('reqwest')
+    expect(table).toContain('Name')
   })
 })
 

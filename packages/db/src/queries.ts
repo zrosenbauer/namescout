@@ -1,5 +1,12 @@
+import type { CheckResult, Run, SimilarityMatch, SyncMeta } from '@namescout/types'
 import type Database from 'better-sqlite3'
-import type { CheckResult, SimilarityMatch, Run, SyncMeta } from '@monkeywrench/types'
+
+function squattedToInt(squatted: boolean | null): number | null {
+  if (squatted === null) {
+    return null
+  }
+  return squatted ? 1 : 0
+}
 
 // ── Package Names ────────────────────────────────────────────────────────────
 
@@ -22,7 +29,7 @@ export function getPackageNames(db: Database.Database): string[] {
   return db
     .prepare('SELECT name FROM packages ORDER BY name')
     .all()
-    .map((row: any) => row.name)
+    .map((row) => (row as { name: string }).name)
 }
 
 export function getPackageNamesNotEmbedded(db: Database.Database): string[] {
@@ -34,18 +41,22 @@ export function getPackageNamesNotEmbedded(db: Database.Database): string[] {
       ORDER BY p.id
     `)
     .all()
-    .map((row: any) => row.name)
+    .map((row) => (row as { name: string }).name)
 }
 
 export function getPackageId(db: Database.Database, name: string): number | null {
-  const row = db.prepare('SELECT id FROM packages WHERE name = ?').get(name) as { id: number | bigint } | undefined
+  const row = db.prepare('SELECT id FROM packages WHERE name = ?').get(name) as
+    | { id: number | bigint }
+    | undefined
   return row ? Number(row.id) : null
 }
 
 // ── Embeddings ───────────────────────────────────────────────────────────────
 
 export function insertEmbedding(db: Database.Database, id: number, embedding: Float32Array): void {
-  db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(Buffer.from(embedding.buffer))
+  db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(
+    Buffer.from(embedding.buffer)
+  )
 }
 
 export function insertEmbeddings(
@@ -54,7 +65,9 @@ export function insertEmbeddings(
 ): void {
   const insertMany = db.transaction((rows: readonly { id: number; embedding: Float32Array }[]) => {
     for (const { id, embedding } of rows) {
-      db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(Buffer.from(embedding.buffer))
+      db.prepare(`INSERT OR REPLACE INTO package_embeddings (id, embedding) VALUES (${id}, ?)`).run(
+        Buffer.from(embedding.buffer)
+      )
     }
   })
   insertMany(entries)
@@ -96,10 +109,10 @@ export function insertResult(db: Database.Database, runId: number, result: Check
     runId,
     result.name,
     result.available ? 1 : 0,
-    result.squatted === null ? null : result.squatted ? 1 : 0,
+    squattedToInt(result.squatted),
     result.riskLevel,
     JSON.stringify(result.stringMatches),
-    JSON.stringify(result.semanticMatches),
+    JSON.stringify(result.semanticMatches)
   )
 }
 
@@ -110,24 +123,35 @@ export function getRuns(db: Database.Database, limit: number = 50): Omit<Run, 'r
 }
 
 export function getRunResults(db: Database.Database, runId: number): CheckResult[] {
+  interface ResultRow {
+    name: string
+    available: number
+    squatted: number | null
+    risk_level: string
+    string_matches: string
+    semantic_matches: string
+  }
+
   const rows = db
     .prepare('SELECT * FROM results WHERE run_id = ? ORDER BY id')
-    .all(runId) as any[]
+    .all(runId) as ResultRow[]
 
   return rows.map((row) => ({
-    name: row.name,
     available: Boolean(row.available),
-    squatted: row.squatted === null ? null : Boolean(row.squatted),
+    name: row.name,
     riskLevel: row.risk_level,
-    stringMatches: JSON.parse(row.string_matches),
     semanticMatches: JSON.parse(row.semantic_matches),
+    squatted: row.squatted === null ? null : Boolean(row.squatted),
+    stringMatches: JSON.parse(row.string_matches),
   }))
 }
 
 // ── Metadata ─────────────────────────────────────────────────────────────────
 
 export function getMeta(db: Database.Database, key: string): string | null {
-  const row = db.prepare('SELECT value FROM meta WHERE key = ?').get(key) as { value: string } | undefined
+  const row = db.prepare('SELECT value FROM meta WHERE key = ?').get(key) as
+    | { value: string }
+    | undefined
   return row?.value ?? null
 }
 

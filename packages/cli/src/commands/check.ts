@@ -1,9 +1,11 @@
-import { command } from '@kidd-cli/core'
-import { z } from 'zod'
-import { runCheck } from '@monkeywrench/core'
-import type { OutputFormat } from '@monkeywrench/types'
-import { ensureDatabase } from '../lib/ensure-db.js'
 import fs from 'node:fs'
+
+import { command } from '@kidd-cli/core'
+import { runCheck } from '@namescout/core'
+import type { OutputFormat } from '@namescout/types'
+import { z } from 'zod'
+
+import { ensureDatabase } from '../lib/ensure-db.js'
 
 const options = z.object({
   file: z.string().optional().describe('JSON file with candidate names'),
@@ -11,18 +13,16 @@ const options = z.object({
 })
 
 export default command({
-  name: 'check <names..>',
   description: 'Check package name availability, squatter status, and similarity',
-  options,
   async handler(ctx) {
-    const raw = (ctx.args as any).names as string | string[]
-    let names: string[] = Array.isArray(raw) ? [...raw] : [raw]
+    const raw = (ctx.args as Record<string, unknown>).names as string | string[]
+    const names: string[] = Array.isArray(raw) ? [...raw] : [raw]
 
     if (ctx.args.file) {
-      const content = fs.readFileSync(ctx.args.file, 'utf-8')
+      const content = fs.readFileSync(ctx.args.file, 'utf8')
       const parsed = JSON.parse(content)
       const fileNames = Array.isArray(parsed) ? parsed : parsed.names
-      names.push(...fileNames)
+      names.push(...(fileNames as string[]))
     }
 
     if (names.length === 0) {
@@ -44,4 +44,6 @@ export default command({
       db.close()
     }
   },
+  name: 'check <names..>',
+  options,
 })

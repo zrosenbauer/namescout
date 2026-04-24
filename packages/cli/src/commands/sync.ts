@@ -1,12 +1,12 @@
 import { command } from '@kidd-cli/core'
-import { openDatabase, initializeSchema, getSyncMeta } from '@monkeywrench/db'
 import {
-  syncPackageNames,
-  embedNewPackages,
-  hasLocalDatabase,
-  getLatestSnapshot,
   downloadSnapshot,
-} from '@monkeywrench/data'
+  embedNewPackages,
+  getLatestSnapshot,
+  hasLocalDatabase,
+  syncPackageNames,
+} from '@namescout/data'
+import { getSyncMeta, initializeSchema, openDatabase } from '@namescout/db'
 
 export default command({
   description: 'Download or update the package name database',

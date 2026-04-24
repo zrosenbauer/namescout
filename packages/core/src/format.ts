@@ -1,4 +1,34 @@
-import type { CheckResult } from '@monkeywrench/types'
+import type { CheckResult, RiskLevel } from '@namescout/types'
+
+function formatSquatted(squatted: boolean | null): string {
+  if (squatted === null) {
+    return '-'
+  }
+  if (squatted) {
+    return '⚠ likely'
+  }
+  return '✓ no'
+}
+
+function formatRisk(level: RiskLevel): string {
+  if (level === 'high') {
+    return '🔴 high'
+  }
+  if (level === 'medium') {
+    return '🟡 medium'
+  }
+  return '🟢 low'
+}
+
+function formatStatus(available: boolean, squatted: boolean | null): string {
+  if (available) {
+    return 'AVAILABLE'
+  }
+  if (squatted) {
+    return 'SQUATTED'
+  }
+  return 'TAKEN'
+}
 
 function npmUrl(name: string): string {
   return `https://www.npmjs.com/package/${name}`
@@ -13,29 +43,27 @@ export function formatTable(results: readonly CheckResult[]): string {
 
   const rows = results.map((r) => {
     const avail = r.available ? '✓ yes' : '✗ no'
-    const squat = r.squatted === null ? '-' : r.squatted ? '⚠ likely' : '✓ no'
-    const risk = r.riskLevel === 'high' ? '🔴 high' : r.riskLevel === 'medium' ? '🟡 medium' : '🟢 low'
+    const squat = formatSquatted(r.squatted)
+    const risk = formatRisk(r.riskLevel)
     const topMatch = r.stringMatches[0]?.name ?? '-'
     const link = r.available ? '-' : npmUrl(r.name)
     return [r.name, avail, squat, risk, topMatch, link]
   })
 
   const widths = columns.map((col, i) =>
-    Math.max(col.length, ...rows.map((row) => row[i]!.length))
+    Math.max(col.length, ...rows.map((row) => (row[i] ?? '').length))
   )
 
-  const header = columns.map((col, i) => pad(col, widths[i]!)).join('  ')
+  const header = columns.map((col, i) => pad(col, widths[i] ?? 0)).join('  ')
   const sep = widths.map((w) => '─'.repeat(w)).join('──')
-  const body = rows.map((row) =>
-    row.map((cell, i) => pad(cell, widths[i]!)).join('  ')
-  )
+  const body = rows.map((row) => row.map((cell, i) => pad(cell, widths[i] ?? 0)).join('  '))
 
   return ['', header, sep, ...body, ''].join('\n')
 }
 
 export function formatAgent(results: readonly CheckResult[]): string {
   const lines = results.map((r) => {
-    const status = r.available ? 'AVAILABLE' : r.squatted ? 'SQUATTED' : 'TAKEN'
+    const status = formatStatus(r.available, r.squatted)
     const risk = r.riskLevel.toUpperCase()
     const similar = r.stringMatches
       .slice(0, 3)

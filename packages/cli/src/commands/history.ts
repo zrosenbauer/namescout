@@ -1,9 +1,9 @@
 import { command } from '@kidd-cli/core'
-import { openDatabase, initializeSchema, getRuns, getRunResults } from '@monkeywrench/db'
+import { getRunResults, getRuns, initializeSchema, openDatabase } from '@namescout/db'
 
 export default command({
   description: 'List past check runs',
-  async handler(ctx) {
+  handler(ctx) {
     const db = openDatabase()
     initializeSchema(db)
 
@@ -11,7 +11,7 @@ export default command({
       const runs = getRuns(db)
 
       if (runs.length === 0) {
-        ctx.log.info('No runs yet. Use `monkeywrench check` to check some names.')
+        ctx.log.info('No runs yet. Use `namescout check` to check some names.')
         return
       }
 
@@ -19,11 +19,11 @@ export default command({
         const results = getRunResults(db, run.id)
         const available = results.filter((r) => r.available).length
         return {
-          ID: run.id,
-          Date: run.timestamp,
-          Source: run.source,
-          Names: results.length,
           Available: `${available}/${results.length}`,
+          Date: run.timestamp,
+          ID: run.id,
+          Names: results.length,
+          Source: run.source,
         }
       })
 

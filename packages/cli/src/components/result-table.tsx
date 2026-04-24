@@ -1,6 +1,6 @@
-import React from 'react'
 import { Box, Select, Text } from '@kidd-cli/core/ui'
-import type { CheckResult } from '@monkeywrench/types'
+import type { CheckResult } from '@namescout/types'
+import React from 'react'
 
 interface ResultTableProps {
   readonly results: readonly CheckResult[]
@@ -10,7 +10,7 @@ interface ResultTableProps {
 export function ResultTable({ results, onSelect }: ResultTableProps): React.ReactElement {
   const options = results.map((r, i) => {
     const avail = r.available ? '✓' : '✗'
-    const squat = r.squatted === null ? '' : r.squatted ? ' (squatted)' : ''
+    const squat = r.squatted ? ' (squatted)' : ''
     return {
       label: `${avail} ${r.name} — ${r.riskLevel} risk${squat}`,
       value: String(i),

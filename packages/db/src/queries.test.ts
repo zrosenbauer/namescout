@@ -1,19 +1,19 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import Database from 'better-sqlite3'
 import * as sqliteVec from 'sqlite-vec'
-import { initializeSchema } from './schema.js'
+
 import {
-  insertPackages,
+  createRun,
+  getMeta,
   getPackageCount,
   getPackageId,
-  createRun,
-  insertResult,
-  getRuns,
   getRunResults,
-  getMeta,
-  setMeta,
+  getRuns,
   getSyncMeta,
+  insertPackages,
+  insertResult,
+  setMeta,
 } from './queries.js'
+import { initializeSchema } from './schema.js'
 
 function createTestDb(): Database.Database {
   const db = new Database(':memory:')
@@ -71,24 +71,24 @@ describe('run and result queries', () => {
     expect(runId).toBe(1)
 
     insertResult(db, runId, {
-      name: 'fetchcraft',
       available: true,
-      squatted: null,
+      name: 'fetchcraft',
       riskLevel: 'low',
-      stringMatches: [{ name: 'fetch', score: 0.8 }],
       semanticMatches: [{ name: 'http-get', score: 0.7 }],
+      squatted: null,
+      stringMatches: [{ name: 'fetch', score: 0.8 }],
     })
 
     const runs = getRuns(db)
     expect(runs).toHaveLength(1)
-    expect(runs[0]!.source).toBe('cli')
+    expect(runs[0]?.source).toBe('cli')
 
     const results = getRunResults(db, runId)
     expect(results).toHaveLength(1)
-    expect(results[0]!.name).toBe('fetchcraft')
-    expect(results[0]!.available).toBe(true)
-    expect(results[0]!.squatted).toBeNull()
-    expect(results[0]!.stringMatches).toEqual([{ name: 'fetch', score: 0.8 }])
+    expect(results[0]?.name).toBe('fetchcraft')
+    expect(results[0]?.available).toBe(true)
+    expect(results[0]?.squatted).toBeNull()
+    expect(results[0]?.stringMatches).toStrictEqual([{ name: 'fetch', score: 0.8 }])
   })
 })
 

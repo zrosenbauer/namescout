@@ -1,18 +1,14 @@
-import {
-  Box,
-  screen,
-  useApp,
-  useInput,
-} from '@kidd-cli/core/ui'
-import React, { useState, useEffect } from 'react'
+import { Box, screen, useApp, useInput } from '@kidd-cli/core/ui'
+import { getRunResults, getRuns, initializeSchema, openDatabase } from '@namescout/db'
+import type { CheckResult, Run } from '@namescout/types'
+import React, { useEffect, useState } from 'react'
 import { match } from 'ts-pattern'
-import { openDatabase, initializeSchema, getRuns, getRunResults } from '@monkeywrench/db'
-import type { CheckResult, Run } from '@monkeywrench/types'
-import { Logo } from '../components/logo.js'
-import { StatusBar } from '../components/status-bar.js'
-import { RunList } from '../components/run-list.js'
-import { ResultTable } from '../components/result-table.js'
+
 import { DetailView } from '../components/detail-view.js'
+import { Logo } from '../components/logo.js'
+import { ResultTable } from '../components/result-table.js'
+import { RunList } from '../components/run-list.js'
+import { StatusBar } from '../components/status-bar.js'
 
 type View = 'runs' | 'results' | 'detail'
 
@@ -31,8 +27,8 @@ function Dashboard(): React.ReactElement {
     const counts = loadedRuns.map((run) => {
       const results = getRunResults(db, run.id)
       return {
-        total: results.length,
         available: results.filter((r) => r.available).length,
+        total: results.length,
       }
     })
     setRuns(loadedRuns)
@@ -80,9 +76,7 @@ function Dashboard(): React.ReactElement {
         .with('results', () => (
           <ResultTable results={selectedRunResults} onSelect={handleResultSelect} />
         ))
-        .with('detail', () =>
-          selectedResult ? <DetailView result={selectedResult} /> : null
-        )
+        .with('detail', () => (selectedResult ? <DetailView result={selectedResult} /> : null))
         .exhaustive()}
       <StatusBar view={view} />
     </Box>
@@ -90,8 +84,8 @@ function Dashboard(): React.ReactElement {
 }
 
 export default screen({
-  name: '$default',
   description: 'Interactive dashboard — browse check results and past runs',
   fullscreen: true,
+  name: '$default',
   render: Dashboard,
 })

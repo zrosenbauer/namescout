@@ -12,7 +12,11 @@
     "typecheck": {
       "dependsOn": ["^build"]
     },
-    "lint": {},
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "format": {},
+    "format:check": {},
     "test": {
       "dependsOn": ["build"]
     },

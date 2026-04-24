@@ -1,6 +1,44 @@
+# Dependencies
 node_modules/
+
+# Build
 dist/
-.turbo/
 *.tsbuildinfo
+
+# Turborepo
+.turbo/
+
+# Environment
 .env
 .env.*
+.env.local
+
+# IDE / Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+
+# Superpowers
+.superpowers/
+
+# SQLite
+*.db
+*.db-wal
+*.db-shm
