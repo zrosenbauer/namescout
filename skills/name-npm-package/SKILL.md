@@ -47,23 +47,23 @@ Present the user with three choices. Use sensible defaults if they want to skip 
 
 Offer these styles. The user can pick one, several, or "all" (default: all).
 
-| Style | Description | Example |
-|---|---|---|
-| **Portmanteau** | Blend two relevant words into one | `fetchcraft`, `logmeld` |
-| **Metaphor** | Borrow a concept from another domain | `anvil` (build tool), `lighthouse` (audit) |
-| **Classical** | Latin, Greek, or other ancient roots | `nomen` (name), `vectis` (lever), `fluxo` (flow) |
-| **Invented** | Coined words that sound right but aren't real | `zapi`, `kerno`, `plexar` |
-| **Action Verb** | A verb that captures what the package does | `invoke`, `stitch`, `reap` |
-| **Compound** | Two short English words joined together | `ironpipe`, `startseed`, `quickfold` |
-| **Wordplay** | Puns, rhymes, alliteration, or phonetic tricks | `commitlint` (commit + lint), `sveltekit` |
+| Style           | Description                                    | Example                                          |
+| --------------- | ---------------------------------------------- | ------------------------------------------------ |
+| **Portmanteau** | Blend two relevant words into one              | `fetchcraft`, `logmeld`                          |
+| **Metaphor**    | Borrow a concept from another domain           | `anvil` (build tool), `lighthouse` (audit)       |
+| **Classical**   | Latin, Greek, or other ancient roots           | `nomen` (name), `vectis` (lever), `fluxo` (flow) |
+| **Invented**    | Coined words that sound right but aren't real  | `zapi`, `kerno`, `plexar`                        |
+| **Action Verb** | A verb that captures what the package does     | `invoke`, `stitch`, `reap`                       |
+| **Compound**    | Two short English words joined together        | `ironpipe`, `startseed`, `quickfold`             |
+| **Wordplay**    | Puns, rhymes, alliteration, or phonetic tricks | `commitlint` (commit + lint), `sveltekit`        |
 
 #### Creativity Level
 
-| Level | What it means |
-|---|---|
-| **Conservative** | Descriptive, obvious, safe. The name tells you what the package does at a glance. Good for enterprise or utility libraries. |
-| **Balanced** *(default)* | A mix of clear and clever. Names are memorable but not confusing. |
-| **Wild** | Abstract, invented, unexpected. Prioritizes uniqueness and brand potential over immediate clarity. Think `vercel`, `deno`, `bun`. |
+| Level                    | What it means                                                                                                                     |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Conservative**         | Descriptive, obvious, safe. The name tells you what the package does at a glance. Good for enterprise or utility libraries.       |
+| **Balanced** _(default)_ | A mix of clear and clever. Names are memorable but not confusing.                                                                 |
+| **Wild**                 | Abstract, invented, unexpected. Prioritizes uniqueness and brand potential over immediate clarity. Think `vercel`, `deno`, `bun`. |
 
 #### How Many Names
 
@@ -74,6 +74,7 @@ Ask how many candidates to generate. Default is **10**. Maximum is **25**. More 
 Generate the requested number of names following the selected styles and creativity level, then **validate them all before showing anything to the user**. The user should never see an unvalidated list.
 
 **Universal qualities of good npm names:**
+
 - Short — ideally under 15 characters, under 20 max
 - Pronounceable — if you can't say it out loud, it's harder to remember
 - Typeable — avoid unusual spellings that cause typos
@@ -82,6 +83,7 @@ Generate the requested number of names following the selected styles and creativ
 - Fewer hyphens is better — single words are stronger on npm
 
 **Per creativity level adjustments:**
+
 - **Conservative**: lean toward descriptive compound words and action verbs. Clarity over cleverness.
 - **Balanced**: mix strategies. Some descriptive, some metaphorical, a couple inventions.
 - **Wild**: push into invented words, unexpected metaphors, phonetic play. Sacrifice some immediate clarity for memorability and brand strength.
@@ -127,6 +129,7 @@ Use this exact structure:
 ```
 
 **Rules for the template:**
+
 - The "Available Names" table includes only AVAILABLE names with LOW or MEDIUM risk
 - Sort by risk (LOW first, then MEDIUM)
 - The "Import" column uses a realistic import statement for the package's ecosystem
@@ -141,6 +144,7 @@ After presenting, ask the user to **rank their top 3-5 favorites** from the avai
 After ranking, ask: **"Want to run another round?"**
 
 If yes, use their feedback to sharpen the next batch:
+
 - **Liked names** — generate more in the same style and creativity range
 - **Disliked names** — avoid those patterns
 - **Adjustments** — they can change the style mix, creativity level, or count for the next round

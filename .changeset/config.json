@@ -3,9 +3,7 @@
   "changelog": ["@changesets/changelog-github", { "repo": "zrosenbauer/namescout" }],
   "commit": false,
   "fixed": [],
-  "linked": [
-    ["namescout", "@namescout/*"]
-  ],
+  "linked": [["namescout", "@namescout/*"]],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
