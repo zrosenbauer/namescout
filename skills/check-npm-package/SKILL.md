@@ -1,9 +1,9 @@
 ---
-name: namescout-check
+name: check-npm-package
 description: Check npm package name availability, squatter detection, and similarity scoring. Use when the user wants to validate whether a package name is available, taken, or squatted.
 metadata:
   author: zrosenbauer
-  version: '0.0.1'
+  version: '0.1.0'
 ---
 
 # Check npm Package Names
@@ -12,10 +12,10 @@ Validate one or more npm package names for availability, squatter status, and si
 
 ## Setup
 
-Run the setup script to ensure the CLI is installed:
+Run the setup script to ensure the CLI is installed and the database is ready:
 
 ```bash
-! bash ./setup.sh
+bash ./setup.sh
 ```
 
 ## Usage
@@ -23,13 +23,13 @@ Run the setup script to ensure the CLI is installed:
 Check one or more names:
 
 ```bash
-! namescout check <name1> <name2> <name3> --format=agent
+namescout check <name1> <name2> <name3> --format=agent
 ```
 
 Check names from a JSON file:
 
 ```bash
-! namescout check --file candidates.json --format=agent
+namescout check --file candidates.json --format=agent
 ```
 
 The JSON file should be an array of strings:

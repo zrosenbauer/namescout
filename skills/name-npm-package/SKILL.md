@@ -1,32 +1,22 @@
 ---
-name: name-package
+name: name-npm-package
 description: Interactive npm package naming workshop. Use when the user needs help naming a package, wants creative name suggestions, or says things like "help me name this", "what should I call this package", "I need a name for...", "name ideas for", or "brainstorm names". Also trigger when the user is building something new and hasn't settled on a name yet.
 metadata:
   author: zrosenbauer
-  version: "1.0.0"
+  version: '0.1.0'
 ---
 
-# Name — npm Package Naming Workshop
+# Think — npm Package Naming Workshop
 
 An interactive, iterative naming workflow. You generate candidates using configurable styles and creativity, validate them against the npm registry with namescout, then work with the user to rank favorites and re-run until they land on the perfect name.
 
 ## Setup
 
-Run the setup script to ensure the local build and database are ready:
+Run the setup script to ensure the CLI is installed and the database is ready:
 
 ```bash
-bash .claude/skills/name-package/setup.sh
+bash ./setup.sh
 ```
-
-## CLI Path
-
-The local dev build is at:
-
-```
-node packages/cli/dist/index.mjs
-```
-
-If the build is missing, run `pnpm build` first.
 
 ## Interacting with the User
 
@@ -96,12 +86,12 @@ Generate the requested number of names following the selected styles and creativ
 - **Balanced**: mix strategies. Some descriptive, some metaphorical, a couple inventions.
 - **Wild**: push into invented words, unexpected metaphors, phonetic play. Sacrifice some immediate clarity for memorability and brand strength.
 
-#### Validating with Namescout
+#### Validating with namescout
 
 After generating candidates, check them all before presenting results. The npm registry rate-limits requests, so run checks in batches of 5-7 names at a time to avoid 403 errors:
 
 ```bash
-node packages/cli/dist/index.mjs check name1 name2 name3 name4 name5 --format=agent
+namescout check name1 name2 name3 name4 name5 --format=agent
 ```
 
 If a batch hits a 403, split it into smaller batches and retry. Collect all results before moving to the presentation step.
@@ -146,7 +136,7 @@ Use this exact structure:
 
 After presenting, ask the user to **rank their top 3-5 favorites** from the available names. They can also mark names they actively dislike — this helps guide the next round.
 
-### Step 6 — Iterate
+### Step 5 — Iterate
 
 After ranking, ask: **"Want to run another round?"**
 
@@ -160,7 +150,7 @@ Each round follows the same loop: generate → validate → present → rank. Ke
 
 There's no limit on rounds — some names click on round 1, others take 4-5 iterations. The goal is to make each round more targeted than the last based on what resonated.
 
-### Step 7 — Final Pick
+### Step 6 — Final Pick
 
 When the user has a winner, do a final sanity check:
 

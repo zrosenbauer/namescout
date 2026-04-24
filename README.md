@@ -100,8 +100,8 @@ When you check a name, namescout:
 
 namescout ships with [Vercel AI skills](https://sdk.vercel.ai/docs/ai-sdk-ui/chatbot-tool-usage) for use in AI agents:
 
-- **`skills/check`** — Validate package name availability from an AI agent
-- **`skills/think`** — Creative naming workflow powered by AI
+- **`skills/check-npm-package`** — Validate package name availability from an AI agent
+- **`skills/name-npm-package`** — Creative naming workflow powered by AI
 
 ## Monorepo Structure
 
@@ -113,8 +113,8 @@ packages/
   core/      → @namescout/core    — check pipeline (squatter → similarity → risk)
   cli/       → namescout (npm)    — CLI + Ink TUI dashboard
 skills/
-  check/     → Vercel skill for validating package names
-  think/     → Vercel skill for creative naming workflow
+  check-npm-package/  → AI skill for validating package names
+  name-npm-package/   → AI skill for creative naming workflow
 ```
 
 ## Further Reading

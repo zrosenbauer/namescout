@@ -15,7 +15,7 @@ Validate one or more npm package names for availability, squatter status, and si
 Run the setup script to ensure the local build and database are ready:
 
 ```bash
-bash .claude/skills/check/setup.sh
+bash .claude/skills/check-package/setup.sh
 ```
 
 ## CLI Path
