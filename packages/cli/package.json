@@ -1,6 +1,6 @@
 {
   "name": "namescout",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "npm package naming toolkit — generate, check, and score package names",
   "keywords": [
     "availability",
