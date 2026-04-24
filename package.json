@@ -15,7 +15,7 @@
     "clean": "turbo run clean",
     "changeset": "changeset",
     "changeset:status": "changeset status --since=origin/main",
-    "version": "changeset version",
+    "changeset:version": "changeset version",
     "release": "pnpm build && changeset publish",
     "prepare": "lefthook install"
   },

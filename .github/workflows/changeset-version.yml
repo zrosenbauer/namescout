@@ -53,6 +53,6 @@ jobs:
         with:
           title: 'release: version packages'
           commit: 'release: version packages'
-          version: pnpm version
+          version: pnpm changeset:version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
