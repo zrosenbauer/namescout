@@ -13,9 +13,15 @@
     "format:check": "oxfmt --check",
     "test": "turbo run test",
     "clean": "turbo run clean",
+    "changeset": "changeset",
+    "changeset:status": "changeset status --since=origin/main",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish",
     "prepare": "lefthook install"
   },
   "devDependencies": {
+    "@changesets/changelog-github": "^0.6.0",
+    "@changesets/cli": "^2.31.0",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@commitlint/types": "^20.5.0",
